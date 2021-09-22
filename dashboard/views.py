@@ -1,5 +1,10 @@
+from dashboard.models import Content
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+# from django.http import HttpResponse
 # Create your views here.
+
+@login_required()
 def dashboard(request):
-    return HttpResponse('Hello world')
+    contents=Content.objects
+    return render(request,'dashboard/content.html',{'contents':contents})
