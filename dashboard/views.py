@@ -6,5 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 @login_required()
 def dashboard(request):
+    current_user=request.user
+    print(current_user)
     contents=Content.objects
-    return render(request,'dashboard/content.html',{'contents':contents})
+    return render(request,'dashboard/content.html',{'contents':contents,'user':current_user})

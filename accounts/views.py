@@ -3,6 +3,10 @@ from django.shortcuts import redirect, render
 from . import forms
 from social import settings
 # Create your views here.
+
+
+
+
 def register_view(request):
     form=forms.CreatedUserForm()
     print(forms)
@@ -11,5 +15,6 @@ def register_view(request):
         if form.is_valid():
             form.save()
             print('saved')
-            redirect(settings.LOGIN_REDIRECT_URL)
+            return redirect(settings.LOGIN_REDIRECT_URL)
     return render(request,'signup.html',{'form':form})
+
