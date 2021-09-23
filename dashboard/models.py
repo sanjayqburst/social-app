@@ -14,7 +14,7 @@ from django.db import models
 #         return self.email
 
 class Content(models.Model):
-    created_by=models.ForeignKey(User,editable=False)
+    created_by=models.ForeignKey(User,on_delete=models.CASCADE)
     image=models.ImageField(upload_to='images/')
     summary=models.CharField(max_length=400)
     time=models.TimeField(auto_now_add=True)

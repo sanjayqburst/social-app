@@ -6,7 +6,7 @@
 		<meta name="description" content="A clone of twitter features" />
 		<title>Yellow Bird</title>
 
-		<link rel="stylesheet" href="./content.css" />
+		<!-- <link rel="stylesheet" href="./content.css" /> -->
 
 		<link
 			href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
@@ -24,15 +24,25 @@
 				user-select: none;
 			}
 
-			@media (min-width: 768px) {
+			@media (min-width: 1268px) {
 				.bd-placeholder-img-lg {
 					font-size: 3.5rem;
 				}
+				/* .card {
+					margin: 0 250px;
+				}
+				.aside-list{
+					margin-left: 50px;
+				} */
 			}
-		</style>
+			.toggle-nav{
+				position: fixed; top: 0px; right: 0px;
+			}
 
-		<!-- Custom styles for this template -->
+			
+		</style>
 	</head>
+
 	<body>
 		<header
 			class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow"
@@ -41,7 +51,7 @@
 				>Yellow Bird</a
 			>
 			<button
-				class="navbar-toggler position-absolute d-md-none collapsed"
+				class="toggle-nav navbar-toggler position-absolute d-md-none collapsed"
 				type="button"
 				data-bs-toggle="collapse"
 				data-bs-target="#sidebarMenu"
@@ -57,13 +67,12 @@
 			<div class="row">
 				<nav
 					id="sidebarMenu"
-					class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
+					class="aside-list col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
 				>
-					<div class="position-sticky pt-3">
+					<div class="position-sticky pt-4">
 						<ul class="nav flex-column">
 							<li class="nav-item">
 								<span data-feather="file">Welcome, {{user}}</span>
-								
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="#">
@@ -91,28 +100,28 @@
 							pt-3
 							pb-2
 							mb-3
-							border-bottom
+							
 						"
 					></div>
 
 					<!-- Section -->
-
-					{% for content in contents.all %}
-					<div class="card">
+					<!-- <p>{{ users }}</p> -->
+					{% for content in contents %}
+					<div class="card col-lg-8">
 						<div class="card-body">
-							<h5 class="card-title">Card title</h5>
+							<h5 class="card-title">{{ content.created_by }}</h5>
 							<p class="card-text">{{content.summary}}</p>
-							<p class="card-text">
-								<small class="text-muted">{{content.time}}</small>
-							</p>
 						</div>
 						<img
 							src="{{content.image.url}}"
-							style="max-width: 50rem"
 							class="card-img-bottom"
 							alt="image"
 						/>
+						<p class="card-text">
+							<small class="text-muted">{{content.time}}</small>
+						</p>
 					</div>
+					<br />
 					{% endfor %}
 				</main>
 			</div>
@@ -136,14 +145,3 @@
 		></script>
 	</body>
 </html>
-
-<!-- <div class="btn">
-							<input
-								type="radio"
-								class="btn-check"
-								name="btnradio"
-								id="btnradio1"
-								autocomplete="off"
-							/>
-							<label class="btn btn-outline-danger" for="btnradio1">Like</label>
-						</div> -->
