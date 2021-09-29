@@ -28,18 +28,12 @@
 				.bd-placeholder-img-lg {
 					font-size: 3.5rem;
 				}
-				/* .card {
-					margin: 0 250px;
-				}
-				.aside-list{
-					margin-left: 50px;
-				} */
 			}
-			.toggle-nav{
-				position: fixed; top: 0px; right: 0px;
+			.toggle-nav {
+				position: fixed;
+				top: 0px;
+				right: 0px;
 			}
-
-			
 		</style>
 	</head>
 
@@ -67,7 +61,14 @@
 			<div class="row">
 				<nav
 					id="sidebarMenu"
-					class="aside-list col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
+					class="
+						aside-list
+						col-md-3 col-lg-2
+						d-md-block
+						bg-light
+						sidebar
+						collapse
+					"
 				>
 					<div class="position-sticky pt-4">
 						<ul class="nav flex-column">
@@ -81,6 +82,12 @@
 								</a>
 							</li>
 							<li class="nav-item">
+								<a class="nav-link" href="/post">
+									<span data-feather="file"></span>
+									Add Post
+								</a>
+							</li>
+							<li class="nav-item">
 								<a class="nav-link" href="{% url 'logout' %}">
 									<span data-feather="layers"></span>
 									Sign Out
@@ -91,21 +98,9 @@
 				</nav>
 
 				<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-					<div
-						class="
-							d-flex
-							justify-content-between
-							flex-wrap flex-md-nowrap
-							align-items-center
-							pt-3
-							pb-2
-							mb-3
-							
-						"
-					></div>
-
-					<!-- Section -->
-					<!-- <p>{{ users }}</p> -->
+					
+					<!-- <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3"></div> -->
+					<!-- Loading contents from django Models -->
 					{% for content in contents %}
 					<div class="card col-lg-8">
 						<div class="card-body">
@@ -120,9 +115,47 @@
 						<p class="card-text">
 							<small class="text-muted">{{content.time}}</small>
 						</p>
+						<span>Comments</span>
+						<div class="comment-section">
+							<!-- <p>{{comments}}</p> -->
+					{% for comment in comments%}
+					<!-- <p>{{comment.post_id_id}}</p>
+					<p>{{comment.id}}</p>
+					<p>{{content.id}}</p> -->
+					{% if content.id == comment.post_id_id %}
+							<div class="card p-3 border-blue mt-3">
+								<div class="d-flex justify-content-between mt-2">
+									<div class="d-flex flex-row">
+										<div class="d-flex flex-column">
+											{% for data in user_data %}
+											{% if data.id == comment.commented_by_id %}
+											<h6 class="mb-0">{{data.username}}</h6>
+											{% endif %}
+											{% endfor %}
+											<span class="date">{{comment.last_modified}}</span>
+										</div>
+									</div>
+								</div>
+								<p class="content">{{comment.comment}}
+								</p>
+							</div>
+							{% endif %}
+
+							{% endfor %}
+							<div class="form">
+								<input class="form-control" placeholder="Write a comment..." />
+								<div class="mt-2 d-flex justify-content-end">
+									<button class="btn btn-outline-secondary btn-sm">
+										Cancel
+									</button>
+									<button class="btn btn-primary btn-sm ms-1">Submit</button>
+								</div>
+							</div>
+						</div>
 					</div>
 					<br />
 					{% endfor %}
+					
 				</main>
 			</div>
 		</div>
