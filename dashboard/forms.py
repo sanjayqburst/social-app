@@ -1,6 +1,5 @@
-from django import forms
-from django.forms import ModelForm, fields
-from .models import Content
+from django.forms import ModelForm
+from .models import Comments, Content
 
 
 class ContentForm(ModelForm):
@@ -20,3 +19,11 @@ class ContentForm(ModelForm):
         """
         form.instance.created_by = self.request.user
         return super().form_valid(form)
+
+
+class CommentForm(ModelForm):
+    class Meta:
+        model=Comments
+        fields=['comment']
+
+    

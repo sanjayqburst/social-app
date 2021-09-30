@@ -98,10 +98,8 @@
 				</nav>
 
 				<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-					
-					<!-- <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3"></div> -->
 					<!-- Loading contents from django Models -->
-					{% for content in contents %}
+					{% for content in contents.all %}
 					<div class="card col-lg-8">
 						<div class="card-body">
 							<h5 class="card-title">{{ content.created_by }}</h5>
@@ -115,13 +113,10 @@
 						<p class="card-text">
 							<small class="text-muted">{{content.time}}</small>
 						</p>
+						
 						<span>Comments</span>
 						<div class="comment-section">
-							<!-- <p>{{comments}}</p> -->
-					{% for comment in comments%}
-					<!-- <p>{{comment.post_id_id}}</p>
-					<p>{{comment.id}}</p>
-					<p>{{content.id}}</p> -->
+					{% for comment in comments.all%}
 					{% if content.id == comment.post_id_id %}
 							<div class="card p-3 border-blue mt-3">
 								<div class="d-flex justify-content-between mt-2">
@@ -132,25 +127,35 @@
 											<h6 class="mb-0">{{data.username}}</h6>
 											{% endif %}
 											{% endfor %}
-											<span class="date">{{comment.last_modified}}</span>
 										</div>
 									</div>
 								</div>
 								<p class="content">{{comment.comment}}
 								</p>
+								<span class="date" style="font-size: 0.8rem;">{{comment.last_modified}}</span>
+
 							</div>
 							{% endif %}
 
 							{% endfor %}
-							<div class="form">
-								<input class="form-control" placeholder="Write a comment..." />
+							<form method="POST" class="form">
+								{% csrf_token%}
+								{% for field in form %}
+								<br>
+								<input
+									class="form-control"
+									id="{{ field.id_for_label }}"
+									name="{{ field.html_name }}"
+									placeholder="Write a comment..."
+									type="{{ field.field.widget.input_type }}"
+								/>
+								{% endfor %}
+								<input type="hidden" value="{{content.id}}" id="post_id" name="post_id">
+								<!-- <input class="form-control" name="comment" placeholder="Write a comment..." /> -->
 								<div class="mt-2 d-flex justify-content-end">
-									<button class="btn btn-outline-secondary btn-sm">
-										Cancel
-									</button>
 									<button class="btn btn-primary btn-sm ms-1">Submit</button>
 								</div>
-							</div>
+							</form>
 						</div>
 					</div>
 					<br />

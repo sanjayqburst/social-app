@@ -1,23 +1,15 @@
 from django.contrib.auth.models import User
 from django.urls.base import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from dashboard.forms import ContentForm
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView, CreateView
+from dashboard.forms import CommentForm, ContentForm
+from django.views.generic import CreateView
 from dashboard.models import Comments, Content
 # Create your views here.
 
-# @login_required()
-# def dashboard(request):
-#     current_user=request.user
-#     print(current_user)
-#     contents=Content.objects
-#     return render(request,'dashboard/content.html',{'contents':contents})
 
 
-# @method_decorator(login_required, name='dispatch')
-class DashboardView(LoginRequiredMixin, TemplateView):
+
+class DashboardView(LoginRequiredMixin, CreateView):
     """
     Method for creating dashboard; (login-required)
 
@@ -26,9 +18,32 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         template_name: path to template
         extra_context dict: passes data for template to render
     """
+
+    model=Comments
+    form_class=CommentForm
     template_name = 'dashboard/dashboard.html'
-    extra_context = {'contents': Content.objects.all(
-    ), 'comments': Comments.objects.all(), 'user_data': User.objects.all()}
+    success_url=reverse_lazy('dashboard')
+    my_model_content=Content.objects.all()
+    print(my_model_content)
+    # my_model_content.refresh_from_db()
+    # my_model_comment=Comments.objects.first()
+    # my_model_comment.refresh_from_db()
+    extra_context = {'contents': Content.objects, 'comments': Comments.objects, 'user_data': User.objects.all()}
+
+    # data=Content.objects.all()
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.commented_by = self.request.user
+        # print(self.request.POST.get('post_id'))
+        content_id=self.request.POST.get('post_id')
+        self.object.post_id = Content.objects.get(id=content_id)
+        self.object.save()
+        # print(form)
+        return super().form_valid(form)
+
+
+
 
 
 class AddPost(LoginRequiredMixin, CreateView):
@@ -42,18 +57,18 @@ class AddPost(LoginRequiredMixin, CreateView):
     Returns:
         form: Validates form
     """
+
+    
     model = Content
     template_name = 'add_post/addpost.html'
     form_class = ContentForm
+    commented=Comments.objects.all()
+    contents_is=Content.objects.all()
     # print(Comments.objects.all())
-    extra_context = {'comments': Comments.objects.all(),
-                     'contents': Content.objects.all()}
+    extra_context = {'comments': commented,
+                     'contents': contents_is}
     success_url = reverse_lazy('dashboard')
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['contents'] = Content.objects.all()
-    #     return context
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
