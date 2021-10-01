@@ -14,7 +14,6 @@ class DashboardView(LoginRequiredMixin, CreateView):
     Method for creating dashboard; (login-required)
 
     Params:
-        TemplateView View: Generate view from template
         template_name: path to template
         extra_context dict: passes data for template to render
     """
@@ -25,12 +24,7 @@ class DashboardView(LoginRequiredMixin, CreateView):
     success_url=reverse_lazy('dashboard')
     my_model_content=Content.objects.all()
     print(my_model_content)
-    # my_model_content.refresh_from_db()
-    # my_model_comment=Comments.objects.first()
-    # my_model_comment.refresh_from_db()
     extra_context = {'contents': Content.objects, 'comments': Comments.objects, 'user_data': User.objects.all()}
-
-    # data=Content.objects.all()
 
     def form_valid(self, form):
         self.object = form.save(commit=False)

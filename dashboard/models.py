@@ -5,9 +5,6 @@ from django.contrib.postgres.fields import ArrayField
 class Content(models.Model):
     """
     Model for storing content of post created
-
-    parms:
-        models class: Creates a database model
     """
     created_by=models.ForeignKey(User,on_delete=models.CASCADE)
     image=models.FileField(upload_to='images/')
@@ -24,13 +21,10 @@ class Content(models.Model):
         return self.summary
         
 
-
-# class Likes(Content,models.Model):
-#     liked_by=models.ForeignKey(User,on_delete=models.CASCADE)
-#     content_id=models.ForeignKey(Content,on_delete=models.CASCADE)
-#     liked=models.BooleanField(default=False)
-
 class Comments(models.Model):
+    """
+    Method for creating comments in database.
+    """
     commented_by=models.ForeignKey(User,on_delete=models.CASCADE,related_name='created_user')
     post_id=models.ForeignKey(Content,on_delete=models.CASCADE,related_name='postrefid')
     comment = models.TextField()
