@@ -69,3 +69,23 @@ class AddPost(LoginRequiredMixin, CreateView):
         self.object.created_by = self.request.user
         self.object.save()
         return super().form_valid(form)
+
+
+
+# def createComment(request):
+#     """
+#     Method for creating comment using ajax
+
+#     """
+#     if request=="POST":
+#         post_id=request.POST['post_id']
+#         commnet_body=request.POST['comment']
+#         commented_by=request.user
+
+#         Comments.objects.create(
+#             post_id=post_id,
+#             comment=commnet_body,
+#             commented_by=commented_by
+#         )
+
+#     return HttpResponse("Response added")
