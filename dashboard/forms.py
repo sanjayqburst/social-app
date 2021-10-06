@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Comments, Content
+from .models import Comment, Content
 
 
 class ContentForm(ModelForm):
@@ -23,7 +23,7 @@ class ContentForm(ModelForm):
 
 class CommentForm(ModelForm):
     class Meta:
-        model=Comments
+        model=Comment
         fields=['comment']
 
     

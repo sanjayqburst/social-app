@@ -1,4 +1,7 @@
+{% load static %}
+
 <!DOCTYPE html>
+
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
@@ -16,6 +19,7 @@
 		/>
 
 		<style>
+
 			.bd-placeholder-img {
 				font-size: 1.125rem;
 				text-anchor: middle;
@@ -115,10 +119,10 @@
 						</p>
 						
 						<span>Comments</span>
-						<div class="comment-section">
-					{% for comment in comments.all%}
+						<div id="comment-div-{{content.id}}" class="comment-section">
+					{% for comment in comments.all %}
 					{% if content.id == comment.post_id_id %}
-							<div class="card p-3 border-blue mt-3">
+							<div  class="card p-3 border-blue mt-3">
 								<div class="d-flex justify-content-between mt-2">
 									<div class="d-flex flex-row">
 										<div class="d-flex flex-column">
@@ -138,24 +142,26 @@
 							{% endif %}
 
 							{% endfor %}
-							<form method="POST" id="comment_form" class="form">
+							<form method="POST" id="comment-form-{{content.id}}" class="form">
 								{% csrf_token%}
 								{% for field in form %}
 								<br>
 								<input
 									class="form-control"
-									id="comment_body"
+									id="comment-value-{{content.id}}"
 									name="{{ field.html_name }}"
 									placeholder="Write a comment..."
 									type="{{ field.field.widget.input_type }}"
 								/>
 								{% endfor %}
-								<input type="hidden" value="{{content.id}}" id="post_id" name="post_id">
+								<input type="hidden" value="{{content.id}}" id="post_id-{{content.id}}" name="post_id">
 								<!-- <input class="form-control" name="comment" placeholder="Write a comment..." /> -->
 								<div class="mt-2 d-flex justify-content-end">
-									<button type="submit"  class="btn btn-primary btn-sm ms-1">Submit</button>
+									<button type="submit" id="submit-comment-{{content.id}}" class="submit-button btn btn-primary btn-sm ms-1">Submit</button>
 								</div>
 							</form>
+							
+							<img id='loading-gif-{{content.id}}' style="display: none;" src="../../static/dashboard/200.gif" alt="gif"  >
 						</div>
 					</div>
 					<br />
@@ -181,25 +187,30 @@
 			integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/"
 			crossorigin="anonymous"
 		></script>
+		
 		<script type="text/javascript" >
-			$(document).on('submit','#comment_form',function(e){
+			$(document).on('submit','.form',function(e){
 				e.preventDefault()
-				console.log()
+				const myArr=this.id.split('-')
+				$("#loading-gif-"+myArr[2]).css("display", "block");
 				$.ajax({
 					type:'POST',
-					url:"{% url 'dashboard' %}",
+					url:"{% url 'comment' %}",
 					data:{
-						post_id:$('#post_id').val(),
-						comment:$('#comment_body').val(),
+						commented_by:'{{user.id}}',
+						post_id:myArr[2],
+						comment:$('#comment-value-'+myArr[2]).val(),
 						csrfmiddlewaretoken: '{{ csrf_token }}'
 					},
 					success:function(data){
-						console.log(JSON.parse(data));
-
-						$("#comment_form")[0].reset(); 
-						$("#comment_form")[1].reset(); 
+						var html=''
+						html+='<div class="card p-3 border-blue mt-3"><div class="d-flex justify-content-between mt-2"><div class="d-flex flex-row"><div class="d-flex flex-column"><h6 class="mb-0">'+"{{user}}"+'</h6></div></div></div><p class="content">'+data["comment"]+'</p><span class="date" style="font-size: 0.8rem;">'+data['last_modified']+'</span></div>'
+						$(html).insertBefore('#comment-form-'+[myArr[2]]);
+						$('#comment-value-'+[myArr[2]]).val('')
+					},
+					complete:function(){
+						$("#loading-gif-"+myArr[2]).css("display", "none");
 					}
-					
 				})
 			})
 		</script>

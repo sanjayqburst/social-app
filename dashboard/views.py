@@ -3,7 +3,7 @@ from django.urls.base import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dashboard.forms import CommentForm, ContentForm
 from django.views.generic import CreateView
-from dashboard.models import Comments, Content
+from dashboard.models import Comment, Content
 # Create your views here.
 
 
@@ -18,13 +18,12 @@ class DashboardView(LoginRequiredMixin, CreateView):
         extra_context dict: passes data for template to render
     """
 
-    model=Comments
+    model=Comment
     form_class=CommentForm
     template_name = 'dashboard/dashboard.html'
     success_url=reverse_lazy('dashboard')
     my_model_content=Content.objects.all()
-    print(my_model_content)
-    extra_context = {'contents': Content.objects, 'comments': Comments.objects, 'user_data': User.objects.all()}
+    extra_context = {'contents': Content.objects, 'comments': Comment.objects, 'user_data': User.objects.all()}
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -56,7 +55,7 @@ class AddPost(LoginRequiredMixin, CreateView):
     model = Content
     template_name = 'add_post/addpost.html'
     form_class = ContentForm
-    commented=Comments.objects.all()
+    commented=Comment.objects.all()
     contents_is=Content.objects.all()
     # print(Comments.objects.all())
     extra_context = {'comments': commented,
